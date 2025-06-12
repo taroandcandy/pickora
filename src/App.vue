@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>我是app</h1>
+    <h1>我是huanhuan</h1>
   </div>
 </template>
 
