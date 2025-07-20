@@ -1,15 +1,25 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-
-    /* Linting */
+    "composite": true,
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "tsBuildInfoFile": "./node_modules/.tsbuildinfo/tsconfig.app.tsbuildinfo",
+    "types": [
+      "vue"
+    ],
+    /* 推荐的严格选项 */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue"
+  ]
 }
