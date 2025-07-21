@@ -1,18 +1,14 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json", //  继承 Vue 默认配置
   "compilerOptions": {
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "moduleResolution": "node",
     "module": "ESNext",
     "target": "ESNext",
     "esModuleInterop": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"]
     }
   },
   "references": [

@@ -10,15 +10,15 @@ import Category from './Category/index.vue'
 const allGlobalComponents = { SvgIcon, Category } as Record<string, Component>
 
 export default {
-    // 一定要叫install方法
-    install(app: App) {
-        // 将svg图标挂载到全局
-        for (const [key, component] of Object.entries(allGlobalComponents)) {
-            app.component(key, component)
-        }
-        // 将icon图标挂载到全局
-        for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-            app.component(key, component)
-        }
+  // 一定要叫install方法
+  install(app: App) {
+    // 将svg图标挂载到全局
+    for (const [key, component] of Object.entries(allGlobalComponents)) {
+      app.component(key, component)
     }
+    // 将icon图标挂载到全局
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+  },
 }

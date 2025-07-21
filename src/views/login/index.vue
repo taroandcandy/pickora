@@ -6,17 +6,33 @@
       <el-row>
         <el-col :span="12" :xs="0"></el-col>
         <el-col :span="12" :xs="24">
-          <el-form ref="loginForms" class="login_form" :model="loginForm" :rules="rules">
+          <el-form
+            ref="loginForms"
+            class="login_form"
+            :model="loginForm"
+            :rules="rules"
+          >
             <h1>Hello</h1>
             <h2>欢迎来的PICKORA</h2>
             <el-form-item prop="username">
               <el-input v-model="loginForm.userNumber" :prefix-icon="User" />
             </el-form-item>
             <el-form-item prop="password">
-              <el-input v-model="loginForm.passWord" type="password" :prefix-icon="Lock" show-password />
+              <el-input
+                v-model="loginForm.passWord"
+                type="password"
+                :prefix-icon="Lock"
+                show-password
+              />
             </el-form-item>
             <el-form-item>
-              <el-button class="login_btn" type="primary" size="default" :padding="loading" @click="login">
+              <el-button
+                class="login_btn"
+                type="primary"
+                size="default"
+                :padding="loading"
+                @click="login"
+              >
                 登录
               </el-button>
             </el-form-item>
@@ -30,15 +46,15 @@
 <script setup lang="ts">
 // 引入登录/密码图标
 import { User, Lock } from '@element-plus/icons-vue'
-import { reactive, ref } from 'vue';
+import { reactive, ref } from 'vue'
 // 引入用户store
 import useUserStore from '@/store/modules/user'
 // 引入路由
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router'
 // 引入提示组件
-import { ElNotification } from 'element-plus';
+import { ElNotification } from 'element-plus'
 // 引入时间判断函数
-import { getTime } from "@/utils/time";
+import { getTime } from '@/utils/time'
 // 引入Particles
 import ParticleBackground from '@/components/ParticleBackground/index.vue'
 
@@ -66,14 +82,14 @@ const rules = {
   // username: [{ required: true, min: 5, max: 15, message: '用户名不能少于5位', trigger: 'change' }],
   userNumber: [{ trigger: 'change', validator: validateUserName }],
   // password: [{required: true, min: 6, max: 15, message: '密码不能少于6位', trigger: 'change'}]
-  passWord: [{ trigger: 'change', validator: validatePassword }]
+  passWord: [{ trigger: 'change', validator: validatePassword }],
 }
 const userStore = useUserStore()
 // 存储登录小圈是否转动
 let loading = ref(false)
 let loginForm = reactive({
   userNumber: 'admin',
-  passWord: '111111'
+  passWord: '111111',
 })
 // 拿到表单的ref
 const loginForms = ref()
@@ -86,23 +102,22 @@ const login = async () => {
   try {
     await userStore.userLogin(loginForm)
     // 编程式导航跳转到展示数据首页/退出时所在的那个页面
-    let redirect:any = $route.query.redirect
-    $router.push({path:redirect || '/'})
+    let redirect: any = $route.query.redirect
+    $router.push({ path: redirect || '/' })
     // $router.push('/')
     ElNotification({
       type: 'success',
       message: '欢迎回来',
-      title: `Hi ${getTime()}好`
+      title: `Hi ${getTime()}好`,
     })
     loading.value = false
-  } catch (err:any) {
+  } catch (err: any) {
     // 响应拦截器有判定，这里就不用展示了
     // ElNotification({
     //   type: 'error',
     //   message: (err as Error).message
     // })
     loading.value = false
-    
   }
 }
 </script>
@@ -123,7 +138,7 @@ const login = async () => {
     width: 500px;
     padding: 30px;
     border-radius: 12px;
-    background-color: #99CCCC;
+    background-color: #99cccc;
     backdrop-filter: blur(12px);
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
     color: white;
@@ -143,7 +158,7 @@ const login = async () => {
 
       .login_btn {
         width: 100%;
-        background-color: #FFCC99;
+        background-color: #ffcc99;
       }
     }
   }

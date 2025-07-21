@@ -6,7 +6,11 @@
       <!-- 左侧菜单滚动条 -->
       <el-scrollbar class="scrollbar">
         <!-- 菜单组件 -->
-        <el-menu :default-active="$route.path" class="custom-menu" :collapse="FoldSettingStore.fold">
+        <el-menu
+          :default-active="$route.path"
+          class="custom-menu"
+          :collapse="FoldSettingStore.fold"
+        >
           <Menu :menuList="userStore.menuRoutes" />
         </el-menu>
       </el-scrollbar>
@@ -43,7 +47,7 @@ let userStore = useUserStore()
 </script>
 <script lang="ts">
 export default {
-  name: 'Layout'
+  name: 'Layout',
 }
 </script>
 
@@ -59,7 +63,7 @@ export default {
     transition: all 0.3s;
 
     &.fold {
-      width: $base-menu-mini-width; 
+      width: $base-menu-mini-width;
     }
 
     .scrollbar {
@@ -88,7 +92,7 @@ export default {
     height: $base-tabbar-height;
     top: 0px;
     left: $base-menu-width;
-    transition: all .3s;
+    transition: all 0.3s;
 
     &.fold {
       width: calc(100vw - $base-menu-mini-width);
@@ -104,7 +108,7 @@ export default {
     top: $base-tabbar-height;
     left: $base-menu-width;
     overflow: auto;
-    transition: all .3s;
+    transition: all 0.3s;
 
     &.fold {
       width: calc(100vw - $base-menu-mini-width);

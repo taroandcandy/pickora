@@ -34,7 +34,7 @@ export default defineConfig(({ command, mode }) => {
       preprocessorOptions: {
         scss: {
           // javascriptEnabled: true,
-          additionalData: '@use "@/styles/variable.scss" as *;'
+          additionalData: '@use "@/styles/variable.scss" as *;',
         },
       },
     },
@@ -48,16 +48,16 @@ export default defineConfig(({ command, mode }) => {
           // 需要代理跨域
           changeOrigin: true,
           // 路径重写
-          rewrite: path => path.replace(/^\/api/, '')
+          rewrite: (path) => path.replace(/^\/api/, ''),
           // rewrite: (path) => path
         },
         [env.VITE_APP_ANOTHER_API]: {
           target: env.VITE_ANOTHER_SERVE,
           changeOrigin: true,
-          rewrite: path => path.replace(new RegExp(`^${env.VITE_APP_ANOTHER_API}`), '')
-        }
-      }
+          rewrite: (path) =>
+            path.replace(new RegExp(`^${env.VITE_APP_ANOTHER_API}`), ''),
+        },
+      },
     },
-
   }
 })

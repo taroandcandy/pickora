@@ -10,8 +10,8 @@ import pinia from './store'
 // 引入全局样式
 import '@/styles/index.scss'
 // 引入Particles
-import Particles from "@tsparticles/vue3";
-import { loadFull } from "tsparticles"; // if you are going to use `loadFull`, install the "tsparticles" package too.
+import Particles from '@tsparticles/vue3'
+import { loadFull } from 'tsparticles' // if you are going to use `loadFull`, install the "tsparticles" package too.
 // import { loadSlim } from "@tsparticles/slim"; // if you are going to use `loadSlim`, install the "@tsparticles/slim" package too.
 // 引入全局路由守卫
 import './permission'
@@ -23,9 +23,9 @@ app.use(ElementPlus, {
 // app.component('Particles', Particles)
 app.use(Particles as any, {
   init: async (engine: any) => {
-    await loadFull(engine);
+    await loadFull(engine)
   },
-});
+})
 // console.log(globalcomponents);
 app.use(globalcomponents)
 // console.log(import.meta.env)
