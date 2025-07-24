@@ -7,14 +7,50 @@ import { reqLogin, reqUserInfo, reqLogout } from '@/api/user'
 import type { userState } from './types/type'
 // 引入token存储/读取/清除方法
 import { SET_TOKEN, GET_TOKEN, REMOVE_TOKEN } from '@/utils/token'
-// 引入路由（常量路由）
-import { constantRoute } from '@/router/routes'
+// 引入路由（常量路由/任意路由/异步路由）
+import { constantRoute, asyncRoute, anyRoute } from '@/router/routes'
+// 引入深拷贝方法
+import cloneDeep from 'lodash/cloneDeep'
+import router from '@/router'
+
 // 引入用户信息数据类型
 import type {
   loginForm,
   loginResponseData,
   userInfoResponseData,
 } from '@/api/user/type'
+
+// // 过滤当前用户需要展示的异步路由
+// function filterAsyncRoute(asyncRoute: any, routes: any) {
+//   return asyncRoute.filter((item: any) => {
+//     if (routes.includes(item.name)) {
+//       if (item.children && item.children.length > 0) {
+//         item.children = filterAsyncRoute(item.children, routes)
+//       }
+//       return true
+//     }
+//   })
+// }
+function filterAsyncRoute(asyncRoute: any[], routes: string[]): any[] {
+  return asyncRoute.filter((route: any) => {
+    if (routes.includes(route.name)) {
+      // 当前路由命中
+      if (route.children && route.children.length > 0) {
+        route.children = filterAsyncRoute(route.children, routes)
+      }
+      return true
+    } else if (route.children && route.children.length > 0) {
+      // 判断子路由是否命中
+      route.children = filterAsyncRoute(route.children, routes)
+      if (route.children.length > 0) {
+        return true // 子路由有命中，保留父级
+      }
+    }
+    return false // 当前路由和子路由都没命中，过滤掉
+  })
+}
+
+
 const useUserStore = defineStore('User', {
   state: (): userState => {
     return {
@@ -24,6 +60,7 @@ const useUserStore = defineStore('User', {
       menuRoutes: constantRoute,
       username: '',
       avatar: '',
+      buttons: []
     }
   },
   actions: {
@@ -54,6 +91,20 @@ const useUserStore = defineStore('User', {
       if (result.code === 200) {
         this.username = result.data.userName
         this.avatar = result.data.avatar
+        this.buttons = result.data.buttons
+        // 计算当前用户需要展示的异步路由
+        const userAsyncRoute = filterAsyncRoute(
+          cloneDeep(asyncRoute),
+          result.data.routes
+        )
+        // 菜单展示数据
+        this.menuRoutes = [...constantRoute, ...userAsyncRoute, anyRoute];
+        console.log("当前菜单数据", this.menuRoutes);
+        console.log("当前路由", router.getRoutes());
+        // 注册路由
+        [...userAsyncRoute, anyRoute].forEach((route: any) => {
+          router.addRoute(route)
+        })
         return 'ok'
       } else {
         return Promise.reject(new Error(result.message))

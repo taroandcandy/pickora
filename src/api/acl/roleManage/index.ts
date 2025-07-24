@@ -9,7 +9,7 @@ enum API {
 }
 // 删除某个角色
 export const reqDeleteRole = (id: number) =>
-  request.delete<number, ResponseData>(`${API.DELETEROLE_URL}/${id}`)
+  request.delete<any, ResponseData>(`${API.DELETEROLE_URL}/${id}`)
 // 添加或者修改某个角色
 export const reqAddOrUpdateRole = (form: AddOrUpdateRole) =>
   request.post<{ id?: number; roleName: string }, ResponseData>(
@@ -18,7 +18,7 @@ export const reqAddOrUpdateRole = (form: AddOrUpdateRole) =>
   )
 // 获取权限列表
 export const reqGetPermission = (id: number) =>
-  request.get<number, MenuResponseData>(
+  request.get<any, MenuResponseData>(
     `${API.GETPERMISSION_URL}/${id}/permissions`,
   )
 // 更新权限

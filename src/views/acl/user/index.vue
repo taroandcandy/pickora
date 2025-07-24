@@ -1,127 +1,46 @@
 <template>
   <div class="user-container">
-    <el-card
-      shadow="always"
-      :body-style="{ padding: '20px' }"
-      style="margin-bottom: 10px"
-    >
+    <el-card shadow="always" :body-style="{ padding: '20px' }" style="margin-bottom: 10px">
       <div class="form-row">
         <div class="input-group">
           <span>用户名</span>
-          <el-input
-            v-model="userName"
-            placeholder="请输入用户名"
-            clearable
-            style="width: 200px; margin-left: 10px"
-          />
+          <el-input v-model="userName" placeholder="请输入用户名" clearable style="width: 200px; margin-left: 10px" />
         </div>
         <div class="button-group">
-          <el-button
-            type="primary"
-            size="default"
-            @click="handleSearch"
-            style="width: 50px; height: 25px"
-          >
+          <el-button type="primary" size="default" @click="handleSearch" style="width: 50px; height: 25px">
             搜索
           </el-button>
-          <el-button
-            type="default"
-            size="default"
-            @click="handleReset"
-            style="width: 50px; height: 25px"
-          >
+          <el-button type="default" size="default" @click="handleReset" style="width: 50px; height: 25px">
             重置
           </el-button>
         </div>
       </div>
     </el-card>
-    <el-card
-      shadow="always"
-      :body-style="{ padding: '20px' }"
-      style="margin-bottom: 10px"
-    >
-      <el-button
-        type="primary"
-        size="large"
-        @click="handleAdd"
-        style="margin-right: 5px; padding: 5px 10px"
-      >
+    <el-card shadow="always" :body-style="{ padding: '20px' }" style="margin-bottom: 10px">
+      <el-button type="primary" size="large" @click="handleAdd" style="margin-right: 5px; padding: 5px 10px">
         添加
       </el-button>
-      <el-button
-        type="danger"
-        size="large"
-        @click="handleDelete"
-        style="padding: 5px 5px"
-      >
+      <el-button type="danger" size="large" @click="handleDelete" style="padding: 5px 5px">
         批量删除
       </el-button>
-      <el-table
-        :data="userList"
-        border
-        stripe
-        style="margin-top: 10px"
-        @selection-change="selectChange"
-      >
+      <el-table :data="userList" border stripe style="margin-top: 10px" @selection-change="selectChange">
         <el-table-column type="selection" width="60px" />
         <el-table-column type="index" width="60px" label="序号" />
-        <el-table-column
-          label="id"
-          width="60px"
-          prop="userId"
-        ></el-table-column>
-        <el-table-column
-          label="账户"
-          width="100px"
-          prop="userNumber"
-        ></el-table-column>
-        <el-table-column
-          label="昵称"
-          width="100px"
-          prop="userName"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          label="用户角色"
-          width="100px"
-          prop="roles"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          label="创建时间"
-          width="100px"
-          prop="createTime"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          label="更新时间"
-          width="100px"
-          prop="updateTime"
-          show-overflow-tooltip
-        ></el-table-column>
+        <el-table-column label="id" width="60px" prop="userId"></el-table-column>
+        <el-table-column label="账户" width="100px" prop="userNumber"></el-table-column>
+        <el-table-column label="昵称" width="100px" prop="userName" show-overflow-tooltip></el-table-column>
+        <el-table-column label="用户角色" width="100px" prop="roles" show-overflow-tooltip></el-table-column>
+        <el-table-column label="创建时间" width="100px" prop="createTime" show-overflow-tooltip></el-table-column>
+        <el-table-column label="更新时间" width="100px" prop="updateTime" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作">
           <template #="{ row, $index }">
-            <el-button
-              type="primary"
-              size="default"
-              @click="handleRoles(row)"
-              icon="User"
-            >
+            <el-button type="primary" size="default" @click="handleRoles(row)" icon="User">
               分配角色
             </el-button>
-            <el-button
-              type="primary"
-              size="default"
-              @click="handleUpdate(row)"
-              icon="Edit"
-            >
+            <el-button type="primary" size="default" @click="handleUpdate(row)" icon="Edit">
               编辑
             </el-button>
-            <el-popconfirm
-              :title="`确认删除${row.userName}吗？`"
-              width="200px"
-              @confirm="handleDeleteOne(row.userNumber)"
-            >
+            <el-popconfirm :title="`确认删除${row.userName}吗？`" width="200px" @confirm="handleDeleteOne(row.userNumber)">
               <template #reference>
                 <el-button type="primary" size="default" icon="Delete">
                   删除
@@ -132,42 +51,20 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <el-pagination
-      v-model:current-page="currentPage"
-      v-model:page-size="pageSize"
-      :page-sizes="[5, 7, 9, 11]"
-      :background="true"
-      layout="prev, pager, next, jumper, ->, sizes, total"
-      :total="total"
-      @current-change="getHasUserList"
-      @size-change="sizeChange"
-    />
+    <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[5, 7, 9, 11]"
+      :background="true" layout="prev, pager, next, jumper, ->, sizes, total" :total="total"
+      @current-change="getHasUserList" @size-change="sizeChange" />
     <!-- 添加/修改用户 -->
     <el-dialog :title="title" v-model="isDialog" width="50%">
-      <el-form
-        :model="form"
-        :rules="rules"
-        ref="formRef"
-        label-width="80px"
-        :inline="false"
-        size="normal"
-        status-icon
-      >
+      <el-form :model="form" :rules="rules" ref="formRef" label-width="80px" :inline="false" size="normal" status-icon>
         <el-form-item label="账号" prop="userNumber">
-          <el-input
-            v-model="form.userNumber"
-            placeholder="请输入账号"
-          ></el-input>
+          <el-input v-model="form.userNumber" placeholder="请输入账号"></el-input>
         </el-form-item>
         <el-form-item label="昵称" prop="userName">
           <el-input v-model="form.userName" placeholder="请输入昵称"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="passWord">
-          <el-input
-            v-model="form.passWord"
-            placeholder="请输入密码"
-            type="password"
-          ></el-input>
+          <el-input v-model="form.passWord" placeholder="请输入密码" type="password"></el-input>
         </el-form-item>
         <el-form-item label="性别">
           <el-radio-group v-model="form.userSex">
@@ -176,20 +73,13 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="电话号码" prop="userPhone">
-          <el-input
-            v-model="form.userPhone"
-            placeholder="请输入电话号码"
-          ></el-input>
+          <el-input v-model="form.userPhone" placeholder="请输入电话号码"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="Email">
           <el-input v-model="form.Email" placeholder="请输入邮箱"></el-input>
         </el-form-item>
         <el-form-item label="简介" prop="brief">
-          <el-input
-            v-model="form.brief"
-            placeholder="请输入简介"
-            type="textarea"
-          ></el-input>
+          <el-input v-model="form.brief" placeholder="请输入简介" type="textarea"></el-input>
         </el-form-item>
       </el-form>
 
@@ -201,31 +91,15 @@
       </template>
     </el-dialog>
     <!-- 分配角色抽屉 -->
-    <el-drawer
-      title="给用户分配角色"
-      v-model="isDrawer"
-      direction="rtl"
-      size="30%"
-      :destroy-on-close="true"
-      :show-close="true"
-      :wrapperClosable="true"
-    >
-      <el-form
-        :model="roleForm"
-        label-width="80px"
-        :inline="false"
-        size="normal"
-      >
+    <el-drawer title="给用户分配角色" v-model="isDrawer" direction="rtl" size="30%" :destroy-on-close="true" :show-close="true"
+      :wrapperClosable="true">
+      <el-form :model="roleForm" label-width="80px" :inline="false" size="normal">
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="roleForm.userName" disabled></el-input>
         </el-form-item>
         <el-form-item label="角色列表" prop="roles">
           <el-checkbox-group v-model="roleForm.roles">
-            <el-checkbox
-              v-for="(item, index) in roleList"
-              :key="item"
-              :label="item"
-            />
+            <el-checkbox v-for="(item, index) in roleList" :key="item" :label="item" />
           </el-checkbox-group>
         </el-form-item>
       </el-form>
@@ -242,7 +116,7 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import {
-  reqUserInfo,
+  reqALLUserInfo,
   reqAddorUpdateUser,
   reqDeleteUser,
   reqGetRoleList,
@@ -476,7 +350,7 @@ const handleDeleteOne = async (id: string) => {
 // 获取已有用户数据
 const getHasUserList = async (pager = 1) => {
   currentPage.value = pager
-  let result: userResponseData = await reqUserInfo(
+  let result: userResponseData = await reqALLUserInfo(
     currentPage.value,
     pageSize.value,
   )
@@ -509,6 +383,7 @@ const handleRoles = async (row: userList) => {
 // 提交角色分配
 const submitRoleForm = async () => {
   try {
+    console.log("当前选中的角色",roleForm.roles);
     let result = await reqAssignRoles(roleForm)
     if (result.code === 200) {
       ElMessage.success('分配角色成功')
@@ -520,7 +395,7 @@ const submitRoleForm = async () => {
     } else {
       ElMessage.error('分配角色失败')
     }
-  } catch (error) {}
+  } catch (error) { }
 }
 </script>
 

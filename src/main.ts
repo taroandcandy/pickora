@@ -3,6 +3,9 @@ import App from '@/App.vue'
 import ElementPlus from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import 'element-plus/dist/index.css'
+// 引入暗黑模式
+import 'element-plus/theme-chalk/dark/css-vars.css'
+
 import 'virtual:svg-icons-register'
 import globalcomponents from '@/components/index.ts'
 import router from './router'

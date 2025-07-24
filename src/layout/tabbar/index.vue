@@ -37,12 +37,12 @@ export default {
   height: 100%;
   display: flex;
   justify-content: space-between;
-  background-image: linear-gradient(
-    to right,
-    rgb(232, 223, 223),
-    rgb(236, 230, 230),
-    rgb(224, 240, 219)
-  );
+  // background-image: linear-gradient(
+  //   to right,
+  //   rgb(232, 223, 223),
+  //   rgb(236, 230, 230),
+  //   rgb(224, 240, 219)
+  // );
 
   .tabbar-left {
     display: flex;

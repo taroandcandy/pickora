@@ -67,13 +67,6 @@
     <!-- 分配权限抽屉 -->
     <el-drawer title="分配权限" v-model="isDrawer" direction="rtl" size="30%" :destroy-on-close="true" :show-close="true"
       :wrapperClosable="true">
-      <!-- <el-form :model="permissionForm" label-width="80px" :inline="false" size="normal">
-                <el-form-item label="全部数据" prop="roles">
-                    <el-checkbox-group v-model="permissionForm.permissions">
-                        <el-checkbox v-for="(item, index) in permissionList" :key="item" :label="item" />
-                    </el-checkbox-group>
-                </el-form-item>
-            </el-form> -->
       <el-tree style="max-width: 300px; max-height: 400px" :data="permissionList" show-checkbox node-key="id"
         default-expand-all :default-checked-keys="defaultCheckedKeys" :props="defaultProps" @check="handleCheck" />
       <template #footer>

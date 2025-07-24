@@ -17,8 +17,8 @@ enum API {
   GETROLELISTS_URL = '/myApi/getRoleList',
   ASSIGNROLES_URL = '/myApi/assignUserRoles',
 }
-// 获取已有用户
-export const reqUserInfo = (currentPage: number, pageSize: number) =>
+// 获取已有的所有用户
+export const reqALLUserInfo = (currentPage: number, pageSize: number) =>
   request.get<any, userResponseData>(API.GETUSERINFO_URL, {
     params: {
       currentPage,

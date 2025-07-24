@@ -7,20 +7,27 @@
       <el-table-column label="操作" sortable>
         <template #="{ row, $index }">
           <el-button type="primary" size="small" @click="handleAdd(row)" :disabled="row.level === 4"
-            :style="row.level === 3 ? 'background-color: #99CC99;' : 'default'" style="padding: 5px;">{{ row.level == 3
-            ?
-            '添加功能' : '添加菜单'
-            }}</el-button>
+            :style="row.level === 3 ? 'background-color: #99CC99;' : 'default'" style="padding: 5px">
+            {{ row.level == 3 ? '添加功能' : '添加菜单' }}
+          </el-button>
           <el-button type="primary" size="small" @click="handleUpdate(row)" :disabled="row.level === 1"
-            style="padding: 5px;">编辑</el-button>
-          <el-button type="primary" size="small" @click="" :disabled="row.level === 1"
-            style="padding: 5px;">删除</el-button>
+            style="padding: 5px">
+            编辑
+          </el-button>
+          <el-popconfirm :title="`确认删除[${row.name}]吗？`" width="200px" @confirm="handleDelete(row.id)">
+            <template #reference>
+              <el-button type="primary" size="small" :disabled="row.level === 1"
+                style="padding: 5px">
+                删除
+              </el-button>
+            </template>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
     <!-- 添加或者编辑 -->
     <el-dialog :title="title" v-model="isDialog" width="30%">
-      <el-form :model="form"  label-width="80px" :inline="false" size="normal">
+      <el-form :model="form" label-width="80px" :inline="false" size="normal">
         <el-form-item label="名称">
           <el-input v-model="form.name" placeholder="请输入名称"></el-input>
         </el-form-item>
@@ -39,15 +46,15 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import type {
   MenuResponseData,
   MenuList,
-  MenuData
+  MenuData,
 } from '@/api/acl/roleManage/type'
 import type { UpdateOrAddMenuData } from '@/api/acl/menuManage/type'
-import { reqGetAllPermission } from '@/api/acl/menuManage'
+import { reqGetAllPermission, reqAddOrUpdatePermission, reqDeletePermission } from '@/api/acl/menuManage'
 
 onMounted(() => {
   handlePermission()
@@ -60,13 +67,31 @@ let isDialog = ref<boolean>(false)
 // 表单
 let form = ref<UpdateOrAddMenuData>({
   name: '',
-  code: ''
+  code: '',
 })
 // 提交表单
-const submit = async() => {
+const submit = async () => {
+  try {
+    let result = await reqAddOrUpdatePermission(form.value)
+    if(result.code === 200){
+      if(form.value.id){
+        ElMessage.success('修改成功')
+      }else{
+        ElMessage.success('添加成功')
+      }
+      handlePermission()
+    }else{
+      if (form.value.id) {
+        ElMessage.error('修改失败')
+      } else {
+        ElMessage.error('添加失败')
+      }
+    }
+  } catch (error) {
+    console.log("服务器出错",error);
+  }
   isDialog.value = false
 }
-
 // 编辑
 const handleUpdate = (row: MenuData) => {
   title.value = '编辑菜单'
@@ -81,7 +106,21 @@ const handleAdd = (row: MenuData) => {
   isDialog.value = true
   form.value.code = ''
   form.value.name = ''
-  form.value.pid = row.pid
+  form.value.pid = row.id
+}
+// 删除
+const handleDelete = async(id:number) => {
+  try {
+    let result = await reqDeletePermission(id)
+    if(result.code === 200){
+      ElMessage.success('删除成功')
+      handlePermission()
+    }else{
+      ElMessage.error('删除失败')
+    }
+  } catch (error) {
+    console.log("服务器出错",error);
+  }
 }
 // 获取菜单数据
 const handlePermission = async () => {

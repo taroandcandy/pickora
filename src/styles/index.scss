@@ -2,13 +2,13 @@
 @use './reset.scss';
 // 滚动条外观设置
 ::-webkit-scrollbar{
-    width: 10px;
+    width: 5px;
 }
 ::-webkit-scrollbar-track {
     background: $base-menu-background;
 }
 ::-webkit-scrollbar-thumb {
     width: 10px;
-    background: yellow;
-    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.5);       /* 0.5 表示 50% 透明 */
+    border-radius: 3px;
 }

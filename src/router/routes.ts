@@ -1,9 +1,10 @@
-// 对外暴露配置路由
+// 对外暴露配置
+// 常量路由
 export const constantRoute = [
   {
     path: '/login',
     component: () => import('@/views/login/index.vue'),
-    name: 'login', //命名路由
+    name: 'Login', //命名路由
     meta: {
       title: '登录',
       hidden: true,
@@ -14,16 +15,19 @@ export const constantRoute = [
     component: () => import('@/layout/index.vue'),
     name: 'Layout',
     meta: {
-      title: '',
-      icon: '',
+      title: '根',
+      icon: 'HomeFilled',
+      hidden:false
     },
     redirect: '/home',
     children: [
       {
         path: '/home',
+        name: 'Home',
         component: () => import('@/views/home/index.vue'),
         meta: {
           title: '首页',
+          hidden:false,
           icon: 'HomeFilled',
         },
       },
@@ -35,9 +39,25 @@ export const constantRoute = [
     name: 'Screen',
     meta: {
       title: '数据大屏',
+      hidden:false,
       icon: 'Platform',
     },
   },
+
+  {
+    path: '/404',
+    component: () => import('@/views/404/index.vue'),
+    name: '404',
+    meta: {
+      title: '404',
+      hidden: true,
+      icon: 'DocumentDelete',
+    },
+  },
+
+]
+// 异步路由
+export const asyncRoute = [
   {
     path: '/acl',
     component: () => import('@/layout/index.vue'),
@@ -126,19 +146,13 @@ export const constantRoute = [
       },
     ],
   },
-  {
-    path: '/404',
-    component: () => import('@/views/404/index.vue'),
-    name: '404',
-    meta: {
-      title: '404',
-      hidden: true,
-    },
-  },
+]
+// 任意路由
+export const anyRoute = [
   {
     path: '/:pathMatch(.*)*',
     redirect: '/404',
-    name: 'any',
+    name: 'Any',
     meta: {
       title: '任意路由',
       hidden: true,

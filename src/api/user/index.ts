@@ -10,7 +10,7 @@ enum API {
 // 登录接口
 export const reqLogin = (data: loginForm) =>
   request.post<any, loginResponseData>(API.LOGIN_URL, data)
-// 获取用户接口
+// 获取当前登录的用户信息接口
 export const reqUserInfo = () =>
   request.get<any, userInfoResponseData>(API.USERINFO_URL)
 // 退出登录

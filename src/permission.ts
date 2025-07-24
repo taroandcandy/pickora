@@ -33,7 +33,8 @@ router.beforeEach(async (to, from, next) => {
           // 优化：pinia持久化,路由拦截器中判断token是否过期，再进行路由跳转
           try {
             await userStore.userInfo()
-            next()
+            //万一:刷新的时候是异步路由,有可能获取到用户信息、异步路由还没有加载完毕,出现空白的效果
+            next({...to})
           } catch (error) {
             // token过期时执行
             // 用户手动修改本地存储token
