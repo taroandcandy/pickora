@@ -6,11 +6,7 @@
       <el-table-column label="描述" prop="description" />
       <el-table-column label="默认图片" width="200px">
         <template #="{ row, $index }">
-          <img
-            :src="row?.images?.[0]?.imgUrl"
-            alt=""
-            style="width: 200px; height: 200px; object-fit: contain"
-          />
+          <img :src="row?.images?.[0]?.imgUrl" alt="" style="width: 80px; height: 80px; object-fit: contain" />
         </template>
       </el-table-column>
       <el-table-column label="重量(g)" width="200px" prop="weight" />
@@ -19,58 +15,24 @@
         <template #="{ row, $index }">
           <!-- <el-button type="success" size="default" @click="" style="width: 35px;height: 25px;" label="切换上一个"
                         icon="Top"></el-button> -->
-          <el-button
-            type="primary"
-            size="default"
-            @click="updateSku(row)"
-            style="width: 35px; height: 25px"
-            icon="Edit"
-            title="编辑SKU"
-          ></el-button>
-          <el-button
-            type="info"
-            size="default"
-            @click="openDrawer(row)"
-            style="width: 35px; height: 25px"
-            icon="InfoFilled"
-            title="查看SKU详情"
-          ></el-button>
-          <el-popconfirm
-            :title="`确认删除${row.skuName}吗？`"
-            width="200px"
-            @confirm="handleDelete(row.id)"
-          >
+          <el-button type="primary" size="default" @click="updateSku(row)" style="width: 35px; height: 25px" icon="Edit"
+            title="编辑SKU" v-has="'btn.SKU.edit'"></el-button>
+          <el-button type="info" size="default" @click="openDrawer(row)" style="width: 35px; height: 25px"
+            icon="InfoFilled" title="查看SKU详情" v-has="'btn.SKU.view'"></el-button>
+          <el-popconfirm :title="`确认删除${row.skuName}吗？`" width="200px" @confirm="handleDelete(row.id)">
             <template #reference>
-              <el-button
-                type="danger"
-                size="default"
-                style="width: 35px; height: 25px"
-                icon="Delete"
-                title="删除SKU"
-              ></el-button>
+              <el-button type="danger" size="default" style="width: 35px; height: 25px" icon="Delete"
+                title="删除SKU" v-has="'btn.SKU.del'"></el-button>
             </template>
           </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      v-model:current-page="currentPage"
-      v-model:page-size="pageSize"
-      :page-sizes="[5, 7, 9, 11]"
-      :background="true"
-      layout="prev, pager, next, jumper, ->, sizes, total"
-      :total="total"
-      @current-change="getHasSKU"
-      @size-change="sizeChange"
-    />
+    <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[5, 7, 9, 11]"
+      :background="true" layout="prev, pager, next, jumper, ->, sizes, total" :total="total" @current-change="getHasSKU"
+      @size-change="sizeChange" />
     <!-- 商品详情 -->
-    <el-drawer
-      v-model="drawer"
-      :direction="direction"
-      :before-close="handleClose"
-      title="查看商品详情"
-      size="40%"
-    >
+    <el-drawer v-model="drawer" :direction="direction"  title="查看商品详情" size="40%">
       <div class="drawer-content">
         <div>
           <strong>名称：</strong>
@@ -86,61 +48,30 @@
         </div>
         <div>
           <strong>平台属性：</strong>
-          <el-tag
-            type="danger"
-            size="normal"
-            v-for="item in detailData?.readableAttr"
-            :key="item.valueId"
-            class="mr-1"
-          >
+          <el-tag type="danger" size="normal" v-for="item in detailData?.readableAttr" :key="item.valueId" class="mr-1">
             {{ item.valueName }}
           </el-tag>
         </div>
         <div>
           <strong>销售属性：</strong>
-          <el-tag
-            v-for="(item, index) in detailData?.saleAttr"
-            :key="index"
-            class="mr-1"
-            type="success"
-          >
+          <el-tag v-for="(item, index) in detailData?.saleAttr" :key="index" class="mr-1" type="success">
             {{ item.valueName }}
           </el-tag>
         </div>
         <div>
           <strong>商品图片：</strong>
           <el-carousel height="200px" motion-blur interval="3000">
-            <el-carousel-item
-              v-for="item in detailData?.images"
-              :key="item.imgUrl"
-            >
-              <el-image
-                :src="item.imgUrl"
-                fit="contain"
-                style="width: 100%; height: 100%; margin-top: 10px"
-              ></el-image>
+            <el-carousel-item v-for="item in detailData?.images" :key="item.imgUrl">
+              <el-image :src="item.imgUrl" fit="contain" style="width: 100%; height: 100%; margin-top: 10px"></el-image>
             </el-carousel-item>
           </el-carousel>
         </div>
       </div>
     </el-drawer>
-    <el-drawer v-model="drawer2" :direction="direction">
-      <template #footer>
-        <div style="flex: auto">
-          <el-button @click="cancelClick">取消</el-button>
-          <el-button type="primary" @click="confirmClick">确定</el-button>
-        </div>
-      </template>
-    </el-drawer>
   </div>
   <!-- 修改sku -->
-  <skuForm
-    v-show="scene === 2"
-    ref="childSkuForm"
-    :skuArr="currentSku"
-    @changeScene="changeScene"
-    @refreshSkuList="getHasSKU"
-  ></skuForm>
+  <skuForm v-show="scene === 2" ref="childSkuForm" :skuArr="currentSku" @changeScene="changeScene"
+    @refreshSkuList="getHasSKU"></skuForm>
 </template>
 
 <script setup lang="ts">
@@ -162,7 +93,6 @@ let pageSize = ref<number>(5)
 let total = ref<number>(0)
 // 详情页抽屉
 let drawer = ref<boolean>(false)
-let drawer2 = ref<boolean>(false)
 const direction = ref<DrawerProps['direction']>('rtl')
 let detailData = ref<SkuListValue>()
 // 修改相关
@@ -188,24 +118,7 @@ const getHasSKU = async (pager = 1) => {
 const sizeChange = () => {
   getHasSKU()
 }
-// 取消退出详情页
-const cancelClick = () => {
-  drawer2.value = true
-}
-// 确定退出详情页
-const confirmClick = () => {
-  drawer2.value = false
-}
-// 点击关闭详情页
-const handleClose = (done: () => void) => {
-  ElMessageBox.confirm('确认关闭详情页吗？')
-    .then(() => {
-      done()
-    })
-    .catch(() => {
-      // catch error
-    })
-}
+
 // 查看商品详情
 const openDrawer = (row: SkuListValue) => {
   drawer.value = true

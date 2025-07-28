@@ -14,7 +14,9 @@
       </el-menu-item>
     </template>
     <!-- 如果只有一个子路由 -->
-    <template v-else-if="item.children && item.children.length === 1 && item.name === 'Layout'">
+    <template v-else-if="
+      item.children && item.children.length === 1 && item.name === 'Layout'
+    ">
       <el-menu-item :index="item.children[0].path" v-if="!item.children[0].meta?.hidden" @click="goRoute">
         <el-icon>
           <component :is="item.children[0].meta?.icon"></component>
@@ -25,7 +27,7 @@
       </el-menu-item>
     </template>
     <!-- 如果有多个子路由 -->
-    <el-sub-menu v-else="item.children && item.children.length > 1" :index="item.path">
+    <el-sub-menu v-else="item.children && item.children.length >= 1" :index="item.path">
       <template #title>
         <el-icon>
           <component :is="item.meta?.icon" />
@@ -55,12 +57,11 @@ const goRoute = (vc: any) => {
 }
 // defineProps(['menuList'])
 const filteredMenu = computed(() => {
-  return props.menuList.filter(item => {
+  return props.menuList.filter((item) => {
     // 过滤掉隐藏的或无 meta/title 的
     return item.meta?.title && !item.meta.hidden
   })
 })
-
 </script>
 
 <script lang="ts">

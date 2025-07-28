@@ -17,7 +17,7 @@ export const constantRoute = [
     meta: {
       title: '根',
       icon: 'HomeFilled',
-      hidden:false
+      hidden: false,
     },
     redirect: '/home',
     children: [
@@ -27,7 +27,7 @@ export const constantRoute = [
         component: () => import('@/views/home/index.vue'),
         meta: {
           title: '首页',
-          hidden:false,
+          hidden: false,
           icon: 'HomeFilled',
         },
       },
@@ -39,7 +39,7 @@ export const constantRoute = [
     name: 'Screen',
     meta: {
       title: '数据大屏',
-      hidden:false,
+      hidden: false,
       icon: 'Platform',
     },
   },
@@ -54,7 +54,6 @@ export const constantRoute = [
       icon: 'DocumentDelete',
     },
   },
-
 ]
 // 异步路由
 export const asyncRoute = [

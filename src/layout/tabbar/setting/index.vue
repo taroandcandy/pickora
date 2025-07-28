@@ -1,14 +1,29 @@
 <template>
-  <el-button icon="Refresh" circle size="small" @click="refresh"
-    style="background-color: #409eff; color: white; border: none" />
-  <el-button icon="FullScreen" circle size="small" @click="fullScreen"
-    style="background-color: #409eff; color: white; border: none" />
+  <el-button
+    icon="Refresh"
+    circle
+    size="small"
+    @click="refresh"
+    style="background-color: #409eff; color: white; border: none"
+  />
+  <el-button
+    icon="FullScreen"
+    circle
+    size="small"
+    @click="fullScreen"
+    style="background-color: #409eff; color: white; border: none"
+  />
   <el-popover title="主题设置" width="300px" trigger="hover">
     <el-form label-width="80px" :inline="false" size="normal">
       <el-form-item label="主题颜色">
         <!-- :teleported='false'解决color闪退问题 -->
-        <el-color-picker v-model="color" @change="setColor" show-alpha :predefine="predefineColors"
-          :teleported='false' />
+        <el-color-picker
+          v-model="color"
+          @change="setColor"
+          show-alpha
+          :predefine="predefineColors"
+          :teleported="false"
+        />
       </el-form-item>
       <el-form-item label="暗黑模式">
         <el-switch v-model="dark" @change="handleDark" />
@@ -16,14 +31,21 @@
     </el-form>
 
     <template #reference>
-      <el-button icon="Setting" circle size="small" style="background-color: #409eff; color: white; border: none" />
+      <el-button
+        icon="Setting"
+        circle
+        size="small"
+        style="background-color: #409eff; color: white; border: none"
+      />
     </template>
-
   </el-popover>
-  <div style="margin-left: 5px;">
+  <div style="margin-left: 5px">
     {{ userStore.username }}
   </div>
-  <img :src="userStore.avatar" style="width: 30px; height: 30px; margin: 0px 10px; border-radius: 50%" />
+  <img
+    :src="userStore.avatar"
+    style="width: 30px; height: 30px; margin: 0px 10px; border-radius: 50%"
+  />
   <!-- 下拉框：退出登录 -->
   <el-dropdown>
     <span class="el-dropdown-link">

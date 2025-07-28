@@ -7,17 +7,18 @@
       <el-table-column label="操作" sortable>
         <template #="{ row, $index }">
           <el-button type="primary" size="small" @click="handleAdd(row)" :disabled="row.level === 4"
-            :style="row.level === 3 ? 'background-color: #99CC99;' : 'default'" style="padding: 5px">
+            :style="row.level === 3 ? 'background-color: #99CC99;' : 'default'" style="padding: 5px"
+            v-has="'btn.Menu.add'">
             {{ row.level == 3 ? '添加功能' : '添加菜单' }}
           </el-button>
           <el-button type="primary" size="small" @click="handleUpdate(row)" :disabled="row.level === 1"
-            style="padding: 5px">
+            style="padding: 5px" v-has="'btn.Menu.edit'">
             编辑
           </el-button>
           <el-popconfirm :title="`确认删除[${row.name}]吗？`" width="200px" @confirm="handleDelete(row.id)">
             <template #reference>
-              <el-button type="primary" size="small" :disabled="row.level === 1"
-                style="padding: 5px">
+              <el-button type="primary" size="small" :disabled="row.level === 1" style="padding: 5px"
+                v-has="'btn.Menu.del'">
                 删除
               </el-button>
             </template>
@@ -26,10 +27,10 @@
       </el-table-column>
     </el-table>
     <!-- 添加或者编辑 -->
-    <el-dialog :title="title" v-model="isDialog" width="30%">
+    <el-dialog :title="title" v-model="isDialog" width="30%" @opened="handleDialogOpened">
       <el-form :model="form" label-width="80px" :inline="false" size="normal">
         <el-form-item label="名称">
-          <el-input v-model="form.name" placeholder="请输入名称"></el-input>
+          <el-input v-model="form.name" placeholder="请输入名称" ref="nameInputRef"></el-input>
         </el-form-item>
         <el-form-item label="权限值">
           <el-input v-model="form.code" placeholder="请输入权限值"></el-input>
@@ -46,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import type {
   MenuResponseData,
@@ -54,11 +55,17 @@ import type {
   MenuData,
 } from '@/api/acl/roleManage/type'
 import type { UpdateOrAddMenuData } from '@/api/acl/menuManage/type'
-import { reqGetAllPermission, reqAddOrUpdatePermission, reqDeletePermission } from '@/api/acl/menuManage'
+import {
+  reqGetAllPermission,
+  reqAddOrUpdatePermission,
+  reqDeletePermission,
+} from '@/api/acl/menuManage'
 
 onMounted(() => {
   handlePermission()
 })
+// 获取输入框元素
+const nameInputRef = ref()
 // 存储菜单列表
 let permissionList = ref<MenuList>([])
 // 弹窗
@@ -73,14 +80,14 @@ let form = ref<UpdateOrAddMenuData>({
 const submit = async () => {
   try {
     let result = await reqAddOrUpdatePermission(form.value)
-    if(result.code === 200){
-      if(form.value.id){
+    if (result.code === 200) {
+      if (form.value.id) {
         ElMessage.success('修改成功')
-      }else{
+      } else {
         ElMessage.success('添加成功')
       }
       handlePermission()
-    }else{
+    } else {
       if (form.value.id) {
         ElMessage.error('修改失败')
       } else {
@@ -88,7 +95,7 @@ const submit = async () => {
       }
     }
   } catch (error) {
-    console.log("服务器出错",error);
+    console.log('服务器出错', error)
   }
   isDialog.value = false
 }
@@ -100,6 +107,12 @@ const handleUpdate = (row: MenuData) => {
   form.value.name = row.name
   form.value.id = row.id
 }
+// 弹窗渲染完成后再聚焦---使用@open方法
+const handleDialogOpened = () => {
+  nextTick(() => {
+    nameInputRef.value?.focus()
+  })
+}
 // 新增
 const handleAdd = (row: MenuData) => {
   title.value = '新增菜单'
@@ -109,17 +122,17 @@ const handleAdd = (row: MenuData) => {
   form.value.pid = row.id
 }
 // 删除
-const handleDelete = async(id:number) => {
+const handleDelete = async (id: number) => {
   try {
     let result = await reqDeletePermission(id)
-    if(result.code === 200){
+    if (result.code === 200) {
       ElMessage.success('删除成功')
       handlePermission()
-    }else{
+    } else {
       ElMessage.error('删除失败')
     }
   } catch (error) {
-    console.log("服务器出错",error);
+    console.log('服务器出错', error)
   }
 }
 // 获取菜单数据

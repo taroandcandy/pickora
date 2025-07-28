@@ -22,8 +22,8 @@ export const reqGetPermission = (id: number) =>
     `${API.GETPERMISSION_URL}/${id}/permissions`,
   )
 // 更新权限
-export const reqUpdatePermission = (id: number, selected: string[]) =>
+export const reqUpdatePermission = (id: number, selectedCodes: string[], selectedButtons:string[]) =>
   request.post<any, ResponseData>(
     `${API.UPDATEPERMISSION_URL}/${id}/permissions`,
-    { selected },
+    { selectedCodes, selectedButtons },
   )

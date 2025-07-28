@@ -17,10 +17,10 @@
       </div>
     </el-card>
     <el-card shadow="always" :body-style="{ padding: '20px' }" style="margin-bottom: 10px">
-      <el-button type="primary" size="large" @click="handleAdd" style="margin-right: 5px; padding: 5px 10px">
+      <el-button type="primary" size="large" @click="handleAdd" style="margin-right: 5px; padding: 5px 10px" v-has="'btn.User.add'">
         添加
       </el-button>
-      <el-button type="danger" size="large" @click="handleDelete" style="padding: 5px 5px">
+      <el-button type="danger" size="large" @click="handleDelete" style="padding: 5px 5px" v-has="'btn.User.delMore'">
         批量删除
       </el-button>
       <el-table :data="userList" border stripe style="margin-top: 10px" @selection-change="selectChange">
@@ -34,15 +34,15 @@
         <el-table-column label="更新时间" width="100px" prop="updateTime" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作">
           <template #="{ row, $index }">
-            <el-button type="primary" size="default" @click="handleRoles(row)" icon="User">
+            <el-button type="primary" size="default" @click="handleRoles(row)" icon="User" v-has="'btn.User.distributeRole'">
               分配角色
             </el-button>
-            <el-button type="primary" size="default" @click="handleUpdate(row)" icon="Edit">
+            <el-button type="primary" size="default" @click="handleUpdate(row)" icon="Edit" v-has="'btn.User.edit'">
               编辑
             </el-button>
             <el-popconfirm :title="`确认删除${row.userName}吗？`" width="200px" @confirm="handleDeleteOne(row.userNumber)">
               <template #reference>
-                <el-button type="primary" size="default" icon="Delete">
+                <el-button type="primary" size="default" icon="Delete" v-has="'btn.User.del'">
                   删除
                 </el-button>
               </template>
@@ -383,7 +383,7 @@ const handleRoles = async (row: userList) => {
 // 提交角色分配
 const submitRoleForm = async () => {
   try {
-    console.log("当前选中的角色",roleForm.roles);
+    console.log('当前选中的角色', roleForm.roles)
     let result = await reqAssignRoles(roleForm)
     if (result.code === 200) {
       ElMessage.success('分配角色成功')

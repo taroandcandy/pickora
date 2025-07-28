@@ -21,7 +21,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -30,17 +29,17 @@ import { ref, onMounted } from 'vue'
 //引入顶部的子组件
 import Top from './components/top/index.vue'
 //引入左侧三个子组件
-import Tourist from './components/tourist/index.vue';
-import Sex from './components/sex/index.vue';
+import Tourist from './components/tourist/index.vue'
+import Sex from './components/sex/index.vue'
 import Age from './components/age/index.vue'
 
 //引入中间两个子组件
-import Map from './components/map/index.vue';
-import Line from './components/line/index.vue';
+import Map from './components/map/index.vue'
+import Line from './components/line/index.vue'
 
 //引入右侧三个子组件
-import Rank from './components/rank/index.vue';
-import Year from './components/year/index.vue';
+import Rank from './components/rank/index.vue'
+import Year from './components/year/index.vue'
 import Counter from './components/counter/index.vue'
 
 let screen = ref()
@@ -48,13 +47,12 @@ onMounted(() => {
   screen.value.style.transform = `scale(${scaleChange()}) translate(-50%, -50%)`
 })
 function scaleChange(w = 1920, h = 1080) {
-  const ww = window.innerWidth / w;
-  const wh = window.innerHeight / h;
-  return ww < wh ? ww : wh;
+  const ww = window.innerWidth / w
+  const wh = window.innerHeight / h
+  return ww < wh ? ww : wh
 }
 window.onresize = () => {
   screen.value.style.transform = `scale(${scaleChange()}) translate(-50%, -50%)`
-
 }
 </script>
 

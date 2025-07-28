@@ -50,7 +50,6 @@ function filterAsyncRoute(asyncRoute: any[], routes: string[]): any[] {
   })
 }
 
-
 const useUserStore = defineStore('User', {
   state: (): userState => {
     return {
@@ -60,7 +59,7 @@ const useUserStore = defineStore('User', {
       menuRoutes: constantRoute,
       username: '',
       avatar: '',
-      buttons: []
+      buttons: [],
     }
   },
   actions: {
@@ -95,14 +94,14 @@ const useUserStore = defineStore('User', {
         // 计算当前用户需要展示的异步路由
         const userAsyncRoute = filterAsyncRoute(
           cloneDeep(asyncRoute),
-          result.data.routes
+          result.data.routes,
         )
         // 菜单展示数据
-        this.menuRoutes = [...constantRoute, ...userAsyncRoute, anyRoute];
-        console.log("当前菜单数据", this.menuRoutes);
-        console.log("当前路由", router.getRoutes());
+        this.menuRoutes = [...constantRoute, ...userAsyncRoute, anyRoute]
+        // console.log('当前菜单数据', this.menuRoutes)
+        // console.log('当前路由', router.getRoutes())
         // 注册路由
-        [...userAsyncRoute, anyRoute].forEach((route: any) => {
+        ;[...userAsyncRoute, anyRoute].forEach((route: any) => {
           router.addRoute(route)
         })
         return 'ok'
@@ -122,6 +121,17 @@ const useUserStore = defineStore('User', {
       this.username = ''
       this.avatar = ''
       REMOVE_TOKEN()
+
+      // 重置动态路由
+      this.menuRoutes = constantRoute
+      // 从 Router 中移除所有已注册的 asyncRoute
+      asyncRoute.forEach((route: any) => {
+        if (router.hasRoute(route.name)) {
+          router.removeRoute(route.name)
+        }
+      })
+      // 最后可选：跳转回登录页
+      router.replace('/login')
     },
   },
   getters: {},

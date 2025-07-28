@@ -34,4 +34,7 @@ app.use(globalcomponents)
 // console.log(import.meta.env)
 app.use(router)
 app.use(pinia)
+// 引入自定义指令
+import { isHasButton } from './directive/has'
+isHasButton(app)
 app.mount('#app')

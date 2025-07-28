@@ -18,7 +18,7 @@
     </el-card>
     <el-card shadow="always" :body-style="{ padding: '20px' }" style="margin-bottom: 10px">
       <el-button type="primary" size="large" @click="handleAdd" style="margin-right: 5px; padding: 5px 10px"
-        icon="Plus">
+        icon="Plus" v-has="'btn.Role.add'">
         添加角色
       </el-button>
       <el-table :data="roleList" border stripe style="margin-top: 10px">
@@ -29,15 +29,15 @@
         <el-table-column label="更新时间" prop="updateTime" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作" width="300px">
           <template #="{ row, $index }">
-            <el-button type="primary" size="default" @click="handlePermission(row)" icon="User">
+            <el-button type="primary" size="default" @click="handlePermission(row)" icon="User" v-has="'btn.Role.distributePermission'">
               分配权限
             </el-button>
-            <el-button type="primary" size="default" @click="handleUpdate(row)" icon="Edit">
+            <el-button type="primary" size="default" @click="handleUpdate(row)" icon="Edit" v-has="'btn.Role.edit'">
               编辑
             </el-button>
             <el-popconfirm :title="`确认删除${row.roleName}吗？`" width="200px" @confirm="handleDelete(row.id)">
               <template #reference>
-                <el-button type="primary" size="default" icon="Delete">
+                <el-button type="primary" size="default" icon="Delete" v-has="'btn.Role.del'">
                   删除
                 </el-button>
               </template>
@@ -166,16 +166,18 @@ const submit = async () => {
   }
 }
 
-// 存储已选中的 name权限列表
-const selectedNames = ref<string[]>([])
-// 存储分配权限的roleid
-let selectedId = ref<number>(-1)
-// 递归处理，满足“父全选保存父，否则保存子”
-const collectOptimizedNames = (
+// 所有已选中的菜单/按钮 code 列表
+const selectedCodes = ref<string[]>([])
+const selectedButtons = ref<string[]>([])
+// // 存储分配权限的roleid
+const selectedId = ref<number>(-1)
+const collectSelectedCodes = (
   nodes: MenuData[],
   selectedIds: number[],
 ): string[] => {
-  const result: string[] = []
+  const codeList: string[] = []
+
+  selectedButtons.value = []
 
   const isFullySelected = (node: MenuData): boolean => {
     if (!node.children || node.children.length === 0) {
@@ -185,37 +187,44 @@ const collectOptimizedNames = (
   }
 
   const traverse = (node: MenuData) => {
+    if (node.level === 4 && selectedIds.includes(node.id)) {
+      if (node.code) selectedButtons.value.push(node.code)
+      return
+    }
+
     if (node.children && node.children.length > 0) {
       if (node.children.every((child) => isFullySelected(child))) {
-        result.push(node.name)
+        if (node.code) codeList.push(node.code)
       } else {
         node.children.forEach(traverse)
       }
     } else {
-      if (selectedIds.includes(node.id)) {
-        result.push(node.name)
+      if (selectedIds.includes(node.id) && node.code) {
+        codeList.push(node.code)
       }
     }
   }
-  nodes.forEach(traverse)
-  return result
-}
 
-// 最终绑定的事件函数
+  nodes.forEach(traverse)
+  return codeList
+}
 const handleCheck = (
   _: MenuData[],
   checkedKeys: { checkedKeys: number[]; halfCheckedKeys: number[] },
 ) => {
   const ids = checkedKeys.checkedKeys
-  selectedNames.value = collectOptimizedNames(permissionList.value, ids)
-  // console.log(" 最终保存的权限名称：", selectedNames.value)
+  selectedCodes.value = collectSelectedCodes(permissionList.value, ids)
+  // console.log("选中的菜单/模块 code：", selectedCodes.value)
+  // console.log("选中的按钮 code：", selectedButtons.value)
 }
+
 // 提交权限表单
 const submitPermissionForm = async () => {
   try {
     let result: ResponseData = await reqUpdatePermission(
       selectedId.value,
-      selectedNames.value,
+      selectedCodes.value,
+      selectedButtons.value
     )
     if (result.code === 200) {
       ElMessage.success('分配权限成功')
@@ -235,7 +244,8 @@ const defaultProps = {
 // 分配权限--获取菜单列表
 const handlePermission = async (row: RoleResponseValue) => {
   isDrawer.value = true
-  selectedNames.value = row.selected
+  selectedCodes.value = []
+  selectedButtons.value = []
   selectedId.value = row.id
   try {
     let result: MenuResponseData = await reqGetPermission(row.id)
@@ -244,6 +254,12 @@ const handlePermission = async (row: RoleResponseValue) => {
       permissionList.value = result.data
       // 将选中的设置为勾选
       getCheckedIds(permissionList.value)
+      // 模拟触发一次 handleCheck 来更新 code 列表
+      handleCheck([], {
+        checkedKeys: defaultCheckedKeys.value,
+        halfCheckedKeys: [],
+      })
+      // console.log("树形数据", permissionList.value);
     }
   } catch (error) {
     console.log('服务器出现问题', error)

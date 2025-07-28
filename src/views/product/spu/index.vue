@@ -3,111 +3,44 @@
     <Category :scene="scene" />
     <el-card style="margin: 10px, 0px">
       <div v-show="scene === 1">
-        <el-button
-          type="primary"
-          size="default"
-          @click="addSpu"
-          icon="Plus"
-          :disabled="categoryStore.c3Id ? false : true"
-        >
+        <el-button type="primary" size="default" @click="addSpu" icon="Plus"
+          :disabled="categoryStore.c3Id ? false : true" v-has="'btn.SPU.addSpu'">
           添加SPU
         </el-button>
         <el-table border style="margin: 10px" :data="SpuArr">
-          <el-table-column
-            type="index"
-            width="55px"
-            label="序号"
-            align="center"
-          />
-          <el-table-column
-            width="150px"
-            label="SPU名称"
-            prop="spuName"
-          ></el-table-column>
+          <el-table-column type="index" width="55px" label="序号" align="center" />
+          <el-table-column width="150px" label="SPU名称" prop="spuName"></el-table-column>
           <!-- 使用show-overflow-tooltip设置内容过长时隐藏 -->
-          <el-table-column
-            label="SPU描述"
-            prop="description"
-            show-overflow-tooltip
-          />
+          <el-table-column label="SPU描述" prop="description" show-overflow-tooltip />
           <el-table-column width="300px" label="操作">
             <template #="{ row, $index }">
-              <el-button
-                style="width: 35px; height: 25px"
-                type="primary"
-                size="default"
-                icon="Plus"
-                title="添加SKU"
-                @click="addSku(row)"
-              ></el-button>
-              <el-button
-                style="width: 35px; height: 25px"
-                type="primary"
-                size="default"
-                @click="updateSpu(row)"
-                icon="Edit"
-                title="修改SPU"
-              ></el-button>
-              <el-button
-                style="width: 35px; height: 25px"
-                type="primary"
-                size="default"
-                @click="viewSku(row.id)"
-                icon="View"
-                title="查看SKU列表"
-              ></el-button>
+              <el-button style="width: 35px; height: 25px" type="primary" size="default" icon="Plus" title="添加SKU"
+                @click="addSku(row)" v-has="'btn.SPU.addSku'"></el-button>
+              <el-button style="width: 35px; height: 25px" type="primary" size="default" @click="updateSpu(row)"
+                icon="Edit" title="修改SPU" v-has="'btn.SPU.editSpu'"></el-button>
+              <el-button style="width: 35px; height: 25px" type="primary" size="default" @click="viewSku(row.id)"
+                icon="View" title="查看SKU列表" v-has="'btn.SPU.viewSku'"></el-button>
               <!-- <el-button style="width: 35px;height: 25px;" type="primary" size="default" @click="deleteSpu(row.id)"
                                 icon="Delete" title="删除SPU"></el-button> -->
-              <el-popconfirm
-                :title="`确认删除${row.spuName}吗？`"
-                width="200px"
-                @confirm="deleteSpu(row.id)"
-              >
+              <el-popconfirm :title="`确认删除${row.spuName}吗？`" width="200px" @confirm="deleteSpu(row.id)">
                 <template #reference>
-                  <el-button
-                    type="primary"
-                    icon="Delete"
-                    style="width: 35px; height: 25px"
-                    title="删除SPU"
-                  ></el-button>
+                  <el-button type="primary" icon="Delete" style="width: 35px; height: 25px" title="删除SPU" v-has="'btn.SPU.delSpu'"></el-button>
                 </template>
               </el-popconfirm>
             </template>
           </el-table-column>
         </el-table>
       </div>
-      <spuForm
-        v-show="scene === 2"
-        @changeScene="changeScene"
-        ref="childSpuForm"
-        :spuArr="currentSpu"
-        @refreshSpuList="getHasSPU"
-      ></spuForm>
-      <skuForm
-        v-show="scene === 3"
-        ref="childSkuForm"
-        :spuArr="currentSpu"
-        @changeScene="changeScene"
-        @refreshSpuList="getHasSPU"
-      ></skuForm>
+      <spuForm v-show="scene === 2" @changeScene="changeScene" ref="childSpuForm" :spuArr="currentSpu"
+        @refreshSpuList="getHasSPU"></spuForm>
+      <skuForm v-show="scene === 3" ref="childSkuForm" :spuArr="currentSpu" @changeScene="changeScene"
+        @refreshSpuList="getHasSPU"></skuForm>
     </el-card>
-    <el-pagination
-      v-model:current-page="currentPage"
-      v-model:page-size="pageSize"
-      :page-sizes="[5, 7, 9, 11]"
-      :background="true"
-      layout="prev, pager, next, jumper, ->, sizes, total"
-      :total="total"
-      @current-change="getHasSPU"
-      @size-change="sizeChange"
-    />
+    <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[5, 7, 9, 11]"
+      :background="true" layout="prev, pager, next, jumper, ->, sizes, total" :total="total" @current-change="getHasSPU"
+      @size-change="sizeChange" />
     <!-- 修改图片对话框 -->
-    <el-dialog
-      v-model="dialogVisible"
-      title="SKU列表"
-      width="600px"
-      height="400px"
-    >
+    <el-dialog v-model="dialogVisible" title="SKU列表" width="600px" height="400px">
       <el-table :data="skuList" border stripe>
         <el-table-column label="sku名字" width="100px" prop="skuName" />
         <el-table-column label="sku价格" width="100px" prop="price" />
@@ -115,14 +48,9 @@
         <el-table-column label="sku图片">
           <template #="{ row, $index }">
             <div style="display: flex; gap: 8px; align-items: center">
-              <el-image
-                v-for="(item, index) in row.images"
-                :key="index"
-                :src="item.imgUrl"
-                :preview-src-list="row.images.map((img: any) => img.imgUrl)"
-                :initial-index="index"
-                style="width: 80px; height: 80px; margin-right: 8px"
-              />
+              <el-image v-for="(item, index) in row.images" :key="index" :src="item.imgUrl"
+                :preview-src-list="row.images.map((img: any) => img.imgUrl)" :initial-index="index"
+                style="width: 80px; height: 80px; margin-right: 8px" />
             </div>
           </template>
         </el-table-column>
